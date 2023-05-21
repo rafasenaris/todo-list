@@ -5,13 +5,18 @@ const todoList = document.querySelector('#todo-list');
 const editForm = document.querySelector('#edit-form');
 const editInput = document.querySelector('#edit-input');
 const cancelEditBtn = document.querySelector('#cancel-edit-btn');
+const pesquisa = document.querySelector('#search-input');
+const tarefas = document.getElementsByClassName("todo");
+let cont = 1;
 
 let oldInputValue;
 
 //funções
 const saveTodo = function(text){
+
     const todo = document.createElement('div');
     todo.classList.add('todo');
+    todo.id = cont;
 
     const todoTitle = document.createElement('h3');
     todoTitle.innerText = text;
@@ -36,6 +41,7 @@ const saveTodo = function(text){
 
     todoInput.value = "";
     todoInput.focus();
+    cont++;
 }
 
 const toggleForms = function (){
@@ -54,6 +60,22 @@ const updateTodo = function(text){
             todoTitle.innerText = text;
         }
     })
+}
+
+function filterCards(){
+    if (pesquisa.value != ''){
+        for(let tarefa of tarefas){
+            let title = tarefa.querySelector('h3');
+            title = title.textContent.toLowerCase();
+            let pesquisaTexto = pesquisa.value.toLowerCase();
+            console.log(title)
+            if(!title.includes(pesquisaTexto)){
+                tarefa.style.display = 'none';
+            }else{
+                tarefa.style.display = '';
+            }
+        }
+    }
 }
 
 //eventos
@@ -111,3 +133,5 @@ editForm.addEventListener("submit", function(e){
 
     toggleForms();
 })
+
+pesquisa.addEventListener('input', filterCards);
