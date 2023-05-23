@@ -5,13 +5,17 @@ const todoList = document.querySelector('#todo-list');
 const editForm = document.querySelector('#edit-form');
 const editInput = document.querySelector('#edit-input');
 const cancelEditBtn = document.querySelector('#cancel-edit-btn');
-const pesquisa = document.querySelector('#search-input');
+const search = document.querySelector('#search-input');
 const tarefas = document.getElementsByClassName("todo");
+const filter = document.getElementById("filter-select");
+const cancelSearchBtn = document.querySelector('#erase-button')
 let cont = 1;
 
 let oldInputValue;
 
-//funções
+//-----FUNÇÕES-----
+
+//função que cria a parte da tarefa com os botões
 const saveTodo = function(text){
 
     const todo = document.createElement('div');
@@ -43,16 +47,17 @@ const saveTodo = function(text){
     todoInput.focus();
     cont++;
 }
-
+//esconder tela
 const toggleForms = function (){
     editForm.classList.toggle('hide');
     todoForm.classList.toggle('hide');
     todoList.classList.toggle('hide');
 }
 
+//atualizar tarefa
 const updateTodo = function(text){
     const todos = document.querySelectorAll(".todo");
-
+    
     todos.forEach((todo) => {
         let todoTitle = todo.querySelector('h3')
 
@@ -62,23 +67,67 @@ const updateTodo = function(text){
     })
 }
 
-function filterCards(){
-    if (pesquisa.value != ''){
+//pesquisa o que foi digitado nas tarefas
+let searchTodo = function (){
+    if (search.value != ''){
         for(let tarefa of tarefas){
             let title = tarefa.querySelector('h3');
             title = title.textContent.toLowerCase();
-            let pesquisaTexto = pesquisa.value.toLowerCase();
-            console.log(title)
-            if(!title.includes(pesquisaTexto)){
+            let searchText = search.value.toLowerCase();
+            if(!title.includes(searchText)){
                 tarefa.style.display = 'none';
             }else{
                 tarefa.style.display = '';
             }
         }
+    }else{
+        for(let tarefa of tarefas){
+            tarefa.style.display = '';
+        }
     }
 }
 
-//eventos
+//filtro de tarefas
+const filterTodo = function(){
+    
+    if(filter.value == 'all'){
+        for(let tarefa of tarefas){
+            if(tarefa.classList.contains('todo')){
+                tarefa.style.display = '';
+            }
+        }
+    }
+
+    if(filter.value == 'done'){
+        for(let tarefa of tarefas){
+            if(tarefa.classList.contains('done')){
+                tarefa.style.display = '';
+            }else{
+                tarefa.style.display = 'none';
+            }
+        }
+    }
+
+    if(filter.value == 'todo'){
+        for(let tarefa of tarefas){
+            if(!tarefa.classList.contains('done')){
+                tarefa.style.display = '';
+            }else{
+                tarefa.style.display = 'none';
+            }
+        }
+    }
+}
+//botão de limpar
+const clearSearch = function(){
+    search.value = '';
+    searchTodo();
+    search.focus();
+
+}
+
+//-----EVENTOS-----
+//add tarefa
 todoForm.addEventListener("submit", function(e){
     e.preventDefault();
     
@@ -88,7 +137,7 @@ todoForm.addEventListener("submit", function(e){
         saveTodo(inputValue);
     }
 })
-
+//cria modelo de tarefa e adiciona na lista de tarefas
 document.addEventListener("click", function(e){
     const targetEl = e.target;
     const parentEl = targetEl.closest("div");
@@ -114,13 +163,13 @@ document.addEventListener("click", function(e){
     }
 
 });
-
+//cancel edit
 cancelEditBtn.addEventListener("click", function(e){
     e.preventDefault();
 
     toggleForms();
 });
-
+//edit
 editForm.addEventListener("submit", function(e){
     e.preventDefault();
 
@@ -133,5 +182,15 @@ editForm.addEventListener("submit", function(e){
 
     toggleForms();
 })
+//pesquisa
+search.addEventListener('input', searchTodo);
 
-pesquisa.addEventListener('input', filterCards);
+//cancela pesquisa
+cancelSearchBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    clearSearch();
+    
+});
+
+//filtro
+filter.addEventListener('change', filterTodo);
