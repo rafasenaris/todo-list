@@ -10,6 +10,8 @@ const tarefas = document.getElementsByClassName("todo");
 const filter = document.getElementById("filter-select");
 const cancelSearchBtn = document.querySelector('#erase-button')
 let cont = 1;
+let oldId;
+let todoId;
 
 let oldInputValue;
 
@@ -59,9 +61,10 @@ const updateTodo = function(text){
     const todos = document.querySelectorAll(".todo");
     
     todos.forEach((todo) => {
-        let todoTitle = todo.querySelector('h3')
+        let todoTitle = todo.querySelector('h3');
+        todoId = todo.id;
 
-        if(todoTitle.innerText === oldInputValue){
+        if(todoTitle.innerText === oldInputValue && todoId === oldId){
             todoTitle.innerText = text;
         }
     })
@@ -160,6 +163,8 @@ document.addEventListener("click", function(e){
 
         editInput.value = todoTitle;
         oldInputValue = todoTitle;
+        oldId = targetEl.parentNode.id
+        
     }
 
 });
@@ -194,3 +199,4 @@ cancelSearchBtn.addEventListener("click", function(e){
 
 //filtro
 filter.addEventListener('change', filterTodo);
+
