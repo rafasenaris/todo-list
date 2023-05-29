@@ -12,7 +12,6 @@ const cancelSearchBtn = document.querySelector('#erase-button')
 let cont = 1;
 let oldId;
 let todoId;
-
 let oldInputValue;
 
 //-----FUNÇÕES-----
